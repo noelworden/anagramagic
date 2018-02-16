@@ -13,7 +13,8 @@
 ActiveRecord::Schema.define(version: 20180215233137) do
 
   create_table "anagrams", force: :cascade do |t|
-    t.string   "base"
+    t.string   "word"
+    t.integer  "count"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
