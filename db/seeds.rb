@@ -1,0 +1,5 @@
+Anagram.create(base: "a")
+Anagram.create(base: "b")
+Anagram.create(base: "c")
+Anagram.create(base: "d")
+Anagram.create(base: "e")
