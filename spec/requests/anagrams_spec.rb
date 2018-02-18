@@ -51,7 +51,7 @@ RSpec.describe 'Anagrams API', type: :request do
   describe 'GET /anagrams/corpus-detail' do
     before { get "/corpus-detail" }
 
-    it 'should not be an empty return'do
+    it 'should not be an empty return' do
       expect(json).not_to be_empty
     end
 
@@ -64,6 +64,38 @@ RSpec.describe 'Anagrams API', type: :request do
     end
 
     it 'returns status code 200' do
+      expect(response).to have_http_status(200)
+    end
+  end
+
+  describe 'GET /anagram-compare' do
+    it "should show `Neither words found in corpus'" do
+      get "/anagram-compare", params: { words: "xxxx, yyyy"}
+      expect(response.body).to eq("Neither words found in corpus")
+      expect(response).to have_http_status(404)
+    end
+
+    it "should show 'first word found in corpus'" do
+      get "/anagram-compare", params: { words: "xxxx, read"}
+      expect(response.body).to eq("First word not found in corpus")
+      expect(response).to have_http_status(404)
+    end
+
+    it "should show 'second word found in corpus'" do
+      get "/anagram-compare", params: { words: "dear, yyyy"}
+      expect(response.body).to eq("Second word not found in corpus")
+      expect(response).to have_http_status(404)
+    end
+
+    it "should show 'first words found in corpus'" do
+      get "/anagram-compare", params: { words: "dear, read"}
+      expect(response.body).to eq("true")
+      expect(response).to have_http_status(200)
+    end
+
+    it "should show 'first words found in corpus'" do
+      get "/anagram-compare", params: { words: "dear, test"}
+      expect(response.body).to eq("false")
       expect(response).to have_http_status(200)
     end
   end

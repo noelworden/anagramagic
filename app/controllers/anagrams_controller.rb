@@ -7,6 +7,25 @@ class AnagramsController < ApplicationController
     #TODO need to get nil search to kick back proper ActiveRecord error mesages
   end
 
+  # curl -X GET http://localhost:3000/anagram-compare -d "words={word1, word2}"
+  def compare
+    array = params[:words].gsub(/{|}/, '').split(", ")
+    first_word = Anagram.find_by(word: array[0])
+    second_word = Anagram.find_by(word: array[1])
+
+    if first_word == nil && second_word == nil
+      render json: "Neither words found in corpus", status: 404
+    elsif first_word == nil
+      render json: "First word not found in corpus", status: 404
+    elsif second_word == nil
+      render json: "Second word not found in corpus", status: 404
+    elsif first_word.sorted_word == second_word.sorted_word
+      render json: "true", status: 200
+    else
+      render json: "false", status: 200
+    end
+  end
+
   def corpus_detail
     word_lengths = Anagram.all.pluck(:word_length)
 
@@ -18,12 +37,12 @@ class AnagramsController < ApplicationController
                  }, status: 200
   end
 
-  # curl -X POST http://localhost:3000 -d "words=XOXO"
+  # curl -X POST http://localhost:3000 -d "words={word1, word2}"
   def create
     # TODO NOTES couldnt find a way that Rails did this automatically,
     # kept getting errors stating a status could only be shown once per action
     success = []
-    array = params[:words].split(", ")
+    array = params[:words].gsub(/{|}/, '').split(", ")
 
     array.each do |word|
       @anagram = Anagram.create!(word: word)
@@ -60,6 +79,10 @@ class AnagramsController < ApplicationController
   end
 
   private
+
+  def anagram_params
+    params.permit(:words)
+  end
 
   def set_anagram
     @anagram = Anagram.find_by(word: params[:word])
