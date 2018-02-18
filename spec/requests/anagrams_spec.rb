@@ -7,6 +7,7 @@ RSpec.describe 'Anagrams API', type: :request do
                     Anagram.create(word: "read")
                     Anagram.create(word: "Read")
                     Anagram.create(word: "Dear")
+                    Anagram.create(word: "test")
                     }
   let(:word) { Anagram.first.word }
 
@@ -47,8 +48,6 @@ RSpec.describe 'Anagrams API', type: :request do
     end
   end
 
-
-
   describe 'GET /anagrams/corpus-detail' do
     before { get "/corpus-detail" }
 
@@ -57,7 +56,7 @@ RSpec.describe 'Anagrams API', type: :request do
     end
 
     it 'displays the details of the corpus' do
-      expect(json["Total Corpus Count"]).to eq("5")
+      expect(json["Total Corpus Count"]).to eq("6")
       expect(json["Minimum Word Length"]).to eq("4")
       expect(json["Maximum Word Length"]).to eq("4")
       expect(json["Median Word Length"]).to eq("4.0")
@@ -100,9 +99,19 @@ RSpec.describe 'Anagrams API', type: :request do
   end
 
   describe 'DELETE_ALL /anagrams/' do
-    # before { delete "/anagrams/#{word}" }
     it 'deletes all records' do
       expect { delete '/anagrams' }.to change(Anagram, :count).to(0)
+    end
+
+    it 'returns status code 204' do
+      delete "/anagrams"
+      expect(response).to have_http_status(204)
+    end
+  end
+
+  describe 'DELETE_ONE /anagrams/:word/destroy_anagram' do
+    it 'deletes all records' do
+      expect { delete "/anagrams/#{word}/destroy_anagram" }.to change(Anagram, :count).to(1)
     end
 
     it 'returns status code 204' do

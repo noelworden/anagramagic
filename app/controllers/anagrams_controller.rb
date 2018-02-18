@@ -1,7 +1,7 @@
 class AnagramsController < ApplicationController
-  before_action :set_anagram, only: [:show, :destroy]
+  before_action :set_anagram, only: [:show, :destroy, :destroy_anagram]
 
-  # curl http://localhost:3000/anagrams/`word`?limit:__&proper_nouns=false
+  # curl http://localhost:3000/anagrams/:word?limit:__&proper_nouns=false
   def show
     render json: @anagram, limit: params[:limit], proper_nouns: params[:proper_nouns]
     #TODO need to get nil search to kick back proper ActiveRecord error mesages
@@ -36,7 +36,7 @@ class AnagramsController < ApplicationController
     render json: success.to_json, status: 201
   end
 
-  # curl -X "DELETE" http://localhost:3000/anagrams/tester
+  # curl -X "DELETE" http://localhost:3000/anagrams/:word
   def destroy
     @anagram.destroy
     head :no_content
@@ -46,6 +46,17 @@ class AnagramsController < ApplicationController
   def destroy_all
     Anagram.all.each(&:destroy)
     head :no_content
+  end
+
+  # curl -X "DELETE" http://localhost:3000/anagrams/:word/destroy_anagram
+  def destroy_anagram
+    array = Anagram.where(sorted_word: @anagram.sorted_word)
+
+    array.each do |anagram|
+      anagram.destroy
+    end
+
+    render status: 204
   end
 
   private
