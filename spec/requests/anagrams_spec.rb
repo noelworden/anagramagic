@@ -100,6 +100,18 @@ RSpec.describe 'Anagrams API', type: :request do
     end
   end
 
+  describe 'GET /anagrams-list/:integer' do
+    it 'should return results if correct integer is used' do
+      get "/anagrams-list/2"
+      expect(json[0]).to eq(["Dear", "Read", "dare", "dear", "read"])
+    end
+
+    it 'should return 404 if incorrect integer is used' do
+      get "/anagrams-list/8"
+      expect(response).to have_http_status(404)
+    end
+  end
+
   describe 'POST /' do
     let (:valid_attributes) { { words: "test01, test02" } }
     let (:original_count) { Anagram.count }
