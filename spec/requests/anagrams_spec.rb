@@ -5,23 +5,49 @@ RSpec.describe 'Anagrams API', type: :request do
                     Anagram.create(word: "dear")
                     Anagram.create(word: "dare")
                     Anagram.create(word: "read")
+                    Anagram.create(word: "Read")
+                    Anagram.create(word: "Dear")
                     }
   let(:word) { Anagram.first.word }
 
   describe 'GET /anagrams/:word' do
     before { get "/anagrams/#{word}" }
 
-    context 'when record exists' do
-      it 'returns the word' do
-        expect(json).not_to be_empty
-        expect(json["anagrams"]).to eq(["dare", "read"])
-      end
+    it 'returns all anagrams' do
+      expect(json).not_to be_empty
+      expect(json["anagrams"]).to eq(["Dear", "Read", "dare", "read"])
+    end
 
-      it 'returns status code 200' do
-        expect(response).to have_http_status(200)
-      end
+    it 'returns status code 200' do
+      expect(response).to have_http_status(200)
     end
   end
+
+  describe 'GET /anagrams/:word?limit=3' do
+    before { get "/anagrams/#{word}/?limit=3" }
+
+    it 'returns only non-proper nouns' do
+      expect(json["anagrams"]).to eq(["Dear", "Read", "dare"])
+    end
+
+    it 'returns status code 200' do
+      expect(response).to have_http_status(200)
+    end
+  end
+
+  describe 'GET /anagrams/:word?proper_nouns=false' do
+    before { get "/anagrams/#{word}/?proper_nouns=false" }
+
+    it 'returns only non-proper nouns' do
+      expect(json["anagrams"]).to eq(["dare", "read"])
+    end
+
+    it 'returns status code 200' do
+      expect(response).to have_http_status(200)
+    end
+  end
+
+
 
   describe 'GET /anagrams/corpus-detail' do
     before { get "/corpus-detail" }
@@ -31,7 +57,7 @@ RSpec.describe 'Anagrams API', type: :request do
     end
 
     it 'displays the details of the corpus' do
-      expect(json["Total Corpus Count"]).to eq("3")
+      expect(json["Total Corpus Count"]).to eq("5")
       expect(json["Minimum Word Length"]).to eq("4")
       expect(json["Maximum Word Length"]).to eq("4")
       expect(json["Median Word Length"]).to eq("4.0")

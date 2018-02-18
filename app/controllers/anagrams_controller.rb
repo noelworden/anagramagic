@@ -1,9 +1,9 @@
 class AnagramsController < ApplicationController
   before_action :set_anagram, only: [:show, :destroy]
 
-  # curl http://localhost:3000/anagrams/`word`?limit:__
+  # curl http://localhost:3000/anagrams/`word`?limit:__&proper_nouns=false
   def show
-    render json: @anagram, limit: params[:limit]
+    render json: @anagram, limit: params[:limit], proper_nouns: params[:proper_nouns]
     #TODO need to get nil search to kick back proper ActiveRecord error mesages
   end
 
