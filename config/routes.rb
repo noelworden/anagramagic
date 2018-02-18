@@ -7,4 +7,5 @@ Rails.application.routes.draw do
   post '/' => 'anagrams#create'
   delete '/anagrams/:word' => 'anagrams#destroy'
   delete '/anagrams' => 'anagrams#destroy_all'
+  delete '/anagrams/:word/destroy_anagram' => 'anagrams#destroy_anagram'
 end
