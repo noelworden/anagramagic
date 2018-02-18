@@ -26,6 +26,7 @@ class AnagramsController < ApplicationController
     end
   end
 
+  # curl http://localhost:3000/corpus-detail
   def corpus_detail
     word_lengths = Anagram.all.pluck(:word_length)
 
@@ -35,6 +36,24 @@ class AnagramsController < ApplicationController
                    "Median Word Length": "#{median(word_lengths)}",
                    "Average Word Length": "#{(word_lengths.sum.to_f / word_lengths.count.to_f).round(3)}"
                  }, status: 200
+  end
+
+  # curl http://localhost:3000/anagrams-list/:integer
+  def list
+    final_array = []
+
+    sorted_word_array = Anagram.all.pluck(:sorted_word)
+    anagrams_array = sorted_word_array.select { |x| sorted_word_array.count(x) >= params[:integer].to_i }.uniq
+
+    if anagrams_array == []
+      render status: 404
+    else
+      anagrams_array.each do |anagram|
+        final_array << Anagram.where(sorted_word: anagram).pluck(:word).sort
+      end
+
+      render json: final_array
+    end
   end
 
   # curl -X POST http://localhost:3000 -d "words={word1, word2}"
