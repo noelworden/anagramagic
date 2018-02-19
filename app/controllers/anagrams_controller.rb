@@ -56,6 +56,14 @@ class AnagramsController < ApplicationController
     end
   end
 
+  # curl http://localhost:3000/big-ol-anagram
+  def maximum
+    sorted_word_array = Anagram.all.pluck(:sorted_word)
+    largest_anagram = sorted_word_array.group_by(&:itself).sort_by {|_key, value| value.count}.last[0]
+
+    render json: "#{Anagram.where(sorted_word: largest_anagram).pluck(:word).sort}", status: 201
+  end
+
   # curl -X POST http://localhost:3000 -d "words={word1, word2}"
   def create
     # TODO NOTES couldnt find a way that Rails did this automatically,
