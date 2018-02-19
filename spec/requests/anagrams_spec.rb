@@ -49,33 +49,27 @@ RSpec.describe 'Anagrams API', type: :request do
   end
 
   describe 'GET /anagram-compare' do
-    it "should show `Neither words found in corpus'" do
-      get "/anagram-compare", params: { words: "xxxx, yyyy"}
-      expect(response.body).to eq("Neither words found in corpus")
+    it "should show error if only one entry" do
+      get "/anagram-compare", params: { words: "yyyy"}
+      expect(response.body).to eq("Please check your word count, you need exactly two words")
       expect(response).to have_http_status(404)
     end
 
-    it "should show 'first word found in corpus'" do
-      get "/anagram-compare", params: { words: "xxxx, read"}
-      expect(response.body).to eq("First word not found in corpus")
+    it "should show error if more than two entries" do
+      get "/anagram-compare", params: { words: "xxxx, yyyy, zzzz"}
+      expect(response.body).to eq("Please check your word count, you need exactly two words")
       expect(response).to have_http_status(404)
     end
 
-    it "should show 'second word found in corpus'" do
+    it "should show 'false' if pair of words are not anagrams" do
       get "/anagram-compare", params: { words: "dear, yyyy"}
-      expect(response.body).to eq("Second word not found in corpus")
-      expect(response).to have_http_status(404)
-    end
-
-    it "should show 'first words found in corpus'" do
-      get "/anagram-compare", params: { words: "dear, read"}
-      expect(response.body).to eq("true")
+      expect(response.body).to eq("false")
       expect(response).to have_http_status(200)
     end
 
-    it "should show 'first words found in corpus'" do
-      get "/anagram-compare", params: { words: "dear, test"}
-      expect(response.body).to eq("false")
+    it "should show 'true' if pair of words are anagrams" do
+      get "/anagram-compare", params: { words: "dear, read"}
+      expect(response.body).to eq("true")
       expect(response).to have_http_status(200)
     end
   end
