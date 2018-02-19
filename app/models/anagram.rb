@@ -2,6 +2,7 @@ class Anagram < ApplicationRecord
   validates_presence_of :word
   validates_uniqueness_of :word
   validates_presence_of :sorted_word
+  validates_presence_of :word_length
 
   #run before_save to get letter count in column
   before_validation :sort_word
