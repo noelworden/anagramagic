@@ -45,6 +45,8 @@ module Api
         final_array = []
 
         sorted_word_array = Anagram.all.pluck(:sorted_word)
+        # create hash of matching `sorted_words` then select all with value count
+        # less then or greater to the given parameter, then grab those keys
         anagrams_array = sorted_word_array.group_by(&:itself).select{|_key, value| value.count >= params[:integer].to_i }.keys
 
         if anagrams_array == []
@@ -61,6 +63,8 @@ module Api
       # curl http://localhost:3000/api/v1/big-ol-anagram
       def maximum
         sorted_word_array = Anagram.all.pluck(:sorted_word)
+        # create hash of matching `sorted_words`, then sort by the number of values,
+        # and grab last (and largest) key
         largest_anagram = sorted_word_array.group_by(&:itself).sort_by {|_key, value| value.count}.last[0]
 
         render json: "#{Anagram.where(sorted_word: largest_anagram).pluck(:word).sort}", status: 201
@@ -68,9 +72,8 @@ module Api
 
       # curl -X POST http://localhost:3000/api/v1/anagrams -d "words={word1, word2}"
       def create
-        # TODO NOTES couldnt find a way that Rails did this automatically,
-        # kept getting errors stating a status could only be shown once per action
         success = []
+
         array = params[:words].gsub(/{|}/, '').split(", ")
 
         array.each do |word|
