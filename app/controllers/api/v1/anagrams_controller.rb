@@ -3,7 +3,7 @@ module Api
     class AnagramsController < ApplicationController
       before_action :set_anagram, only: [:show, :destroy, :destroy_anagram]
 
-      # curl http://localhost:3000/anagrams/:word?limit=:integer&proper_nouns=false
+      # curl http://localhost:3000/api/v1/anagrams/:word?limit=:integer&proper_nouns=false
       def show
         if @anagram == nil
           render status: 404
@@ -12,7 +12,7 @@ module Api
         end
       end
 
-      # curl -X GET http://localhost:3000/anagram-compare -d "words={word1, word2}"
+      # curl -X GET http://localhost:3000/api/v1/anagram-compare -d "words={word1, word2}"
       def compare
         array = params[:words].gsub(/{|}/, '').split(", ")
 
@@ -28,7 +28,7 @@ module Api
         end
       end
 
-      # curl http://localhost:3000/corpus-detail
+      # curl http://localhost:3000/api/v1/corpus-detail
       def corpus_detail
         word_lengths = Anagram.all.pluck(:word_length)
 
@@ -40,7 +40,7 @@ module Api
                      }, status: 200
       end
 
-      # curl http://localhost:3000/anagrams-list/:integer
+      # curl http://localhost:3000/api/v1/anagrams-list/:integer
       def list
         final_array = []
 
@@ -58,7 +58,7 @@ module Api
         end
       end
 
-      # curl http://localhost:3000/big-ol-anagram
+      # curl http://localhost:3000/api/v1/big-ol-anagram
       def maximum
         sorted_word_array = Anagram.all.pluck(:sorted_word)
         largest_anagram = sorted_word_array.group_by(&:itself).sort_by {|_key, value| value.count}.last[0]
@@ -66,7 +66,7 @@ module Api
         render json: "#{Anagram.where(sorted_word: largest_anagram).pluck(:word).sort}", status: 201
       end
 
-      # curl -X POST http://localhost:3000/anagrams -d "words={word1, word2}"
+      # curl -X POST http://localhost:3000/api/v1/anagrams -d "words={word1, word2}"
       def create
         # TODO NOTES couldnt find a way that Rails did this automatically,
         # kept getting errors stating a status could only be shown once per action
@@ -84,19 +84,19 @@ module Api
         render json: success.to_json, status: 201
       end
 
-      # curl -X DELETE http://localhost:3000/anagrams/:word
+      # curl -X DELETE http://localhost:3000/api/v1/anagrams/:word
       def destroy
         @anagram.destroy
         head :no_content
       end
 
-      # curl -X DELETE http://localhost:3000/anagrams
+      # curl -X DELETE http://localhost:3000/api/v1/anagrams
       def destroy_all
         Anagram.all.each(&:destroy)
         head :no_content
       end
 
-      # curl -X DELETE http://localhost:3000/anagrams/:word/destroy_anagram
+      # curl -X DELETE http://localhost:3000/api/v1/anagrams/:word/destroy_anagram
       def destroy_anagram
         array = Anagram.where(sorted_word: @anagram.sorted_word)
 
