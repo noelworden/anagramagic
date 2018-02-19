@@ -48,26 +48,6 @@ RSpec.describe 'Anagrams API', type: :request do
     end
   end
 
-  describe 'GET /anagrams/corpus-detail' do
-    before { get "/corpus-detail" }
-
-    it 'should not be an empty return' do
-      expect(json).not_to be_empty
-    end
-
-    it 'displays the details of the corpus' do
-      expect(json["Total Corpus Count"]).to eq("6")
-      expect(json["Minimum Word Length"]).to eq("4")
-      expect(json["Maximum Word Length"]).to eq("4")
-      expect(json["Median Word Length"]).to eq("4.0")
-      expect(json["Average Word Length"]).to eq("4.0")
-    end
-
-    it 'returns status code 200' do
-      expect(response).to have_http_status(200)
-    end
-  end
-
   describe 'GET /anagram-compare' do
     it "should show `Neither words found in corpus'" do
       get "/anagram-compare", params: { words: "xxxx, yyyy"}
@@ -100,6 +80,27 @@ RSpec.describe 'Anagrams API', type: :request do
     end
   end
 
+
+  describe 'GET /anagrams/corpus-detail' do
+    before { get "/corpus-detail" }
+
+    it 'should not be an empty return' do
+      expect(json).not_to be_empty
+    end
+
+    it 'displays the details of the corpus' do
+      expect(json["Total Corpus Count"]).to eq("6")
+      expect(json["Minimum Word Length"]).to eq("4")
+      expect(json["Maximum Word Length"]).to eq("4")
+      expect(json["Median Word Length"]).to eq("4.0")
+      expect(json["Average Word Length"]).to eq("4.0")
+    end
+
+    it 'returns status code 200' do
+      expect(response).to have_http_status(200)
+    end
+  end
+
   describe 'GET /anagrams-list/:integer' do
     it 'should return results if correct integer is used' do
       get "/anagrams-list/2"
@@ -112,11 +113,16 @@ RSpec.describe 'Anagrams API', type: :request do
     end
   end
 
+  describe 'GET /big-ol-anagram' do
+    it 'should list of largest anagram' do
+      get "/big-ol-anagram"
+      expect(json).to eq(["Dear", "Read", "dare", "dear", "read"])
+    end
+  end
+
   describe 'POST /' do
     let (:valid_attributes) { { words: "test01, test02" } }
-    let (:original_count) { Anagram.count }
 
-    # before { post '/', params: valid_attributes }
     # TODO NOTES had difficulty using 'before' when trying to get a database count
     it 'increases Anagram count by 2' do
       expect {
