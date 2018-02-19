@@ -13,19 +13,16 @@ class AnagramsController < ApplicationController
   # curl -X GET http://localhost:3000/anagram-compare -d "words={word1, word2}"
   def compare
     array = params[:words].gsub(/{|}/, '').split(", ")
-    first_word = Anagram.find_by(word: array[0])
-    second_word = Anagram.find_by(word: array[1])
 
-    if first_word == nil && second_word == nil
-      render json: "Neither words found in corpus", status: 404
-    elsif first_word == nil
-      render json: "First word not found in corpus", status: 404
-    elsif second_word == nil
-      render json: "Second word not found in corpus", status: 404
-    elsif first_word.sorted_word == second_word.sorted_word
-      render json: "true", status: 200
+    if array.count != 2
+      render json: "Please check your word count, you need exactly two words", status: 404
     else
-      render json: "false", status: 200
+      first_word = array[0].downcase.chars.sort.join
+      second_word = array[1].downcase.chars.sort.join
+
+      boolean = first_word == second_word ? "true" : "false"
+
+      render json: boolean, status: 200
     end
   end
 
