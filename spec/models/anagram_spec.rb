@@ -1,8 +1,27 @@
 require 'rails_helper'
 
 RSpec.describe Anagram, type: :model do
-  #TODO get presence_of tests to pass
-  it { should validate_presence_of(:word) }
-  it { should validate_uniqueness_of(:word) }
-  it { should validate_presence_of(:letter_count) }
+  describe 'creating a valid record' do
+    anagram = Anagram.new(word: "test")
+
+    it "is valid with valid attributes" do
+      expect(anagram).to be_valid
+    end
+
+    it "should automatically create 'sorted_word' attribute" do
+      expect(anagram.sorted_word).to_not be_empty
+    end
+
+    it "should automatically create 'word_length' attribute" do
+      expect(anagram.word_length).to eq(4)
+    end
+
+    it 'should fail if its a duplicate word' do
+      anagram1 = Anagram.create(word: "testx")
+      anagram2 = Anagram.create(word: "testx")
+
+      expect(anagram1).to be_valid
+      expect(anagram2).to_not be_valid
+    end
+  end
 end
