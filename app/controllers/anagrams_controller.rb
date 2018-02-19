@@ -1,10 +1,13 @@
 class AnagramsController < ApplicationController
   before_action :set_anagram, only: [:show, :destroy, :destroy_anagram]
 
-  # curl http://localhost:3000/anagrams/:word?limit:__&proper_nouns=false
+  # curl http://localhost:3000/anagrams/:word?limit=:integer&proper_nouns=false
   def show
-    render json: @anagram, limit: params[:limit], proper_nouns: params[:proper_nouns]
-    #TODO need to get nil search to kick back proper ActiveRecord error mesages
+    if @anagram == nil
+      render status: 404
+    else
+      render json: @anagram, limit: params[:limit], proper_nouns: params[:proper_nouns]
+    end
   end
 
   # curl -X GET http://localhost:3000/anagram-compare -d "words={word1, word2}"
@@ -43,7 +46,7 @@ class AnagramsController < ApplicationController
     final_array = []
 
     sorted_word_array = Anagram.all.pluck(:sorted_word)
-    anagrams_array = sorted_word_array.select { |x| sorted_word_array.count(x) >= params[:integer].to_i }.uniq
+    anagrams_array = sorted_word_array.group_by(&:itself).select{|_key, value| value.count >= params[:integer].to_i }.keys
 
     if anagrams_array == []
       render status: 404
