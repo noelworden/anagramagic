@@ -1,9 +1,7 @@
 Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
-      #TODO get into api/v1
       get '/anagrams/:word' => 'anagrams#show'
-      #TODO NOTES had to name it something with a hyphen, becuase it would otherwise be interfere with dicitonary words
       get '/anagram-compare' => 'anagrams#compare'
       get '/corpus-detail' => 'anagrams#corpus_detail'
       get '/anagrams-list/:integer' => 'anagrams#list'
