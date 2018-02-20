@@ -178,3 +178,7 @@ This app can be used two ways, either pulled down and ran locally, or by utilizi
 - I started with a SQLite database, but switched to Postgresql once I decided I would host the app on Heroku.
 - I decided to create additional attributes when seeding the database, which made the initial database creation slow, but the requests more efficient.
 - It seemed odd to make a `destroy-all` request, not sure how a user would use it, and it could cause a lot of damage. It also seems like something that should have a confirmation, so thats why I made the endpoint URL so descriptive.
+
+**v2 Considerations**
+  - Because this lives online, it should have a authentication system in place.
+  - There are a few endpoints that would definitely benefit from caching, like `/big-ol-anagram` and `/corpus-detail` for example.
