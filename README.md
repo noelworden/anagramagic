@@ -29,7 +29,8 @@ This app can be used two ways, either pulled down and ran locally, or by utilizi
           ]
         }
         ```
-
+      - Status
+        - `200`
   - **GET** `/anagram-compare`
     - Get comparison of whether two provided words are anagrams of each other. Must be exactly two words.
       - Required Params
