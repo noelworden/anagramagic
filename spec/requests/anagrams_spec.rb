@@ -98,7 +98,7 @@ RSpec.describe 'Anagrams API', type: :request do
   describe 'GET /api/v1/anagrams-list/:integer' do
     it 'should return results if correct integer is used' do
       get '/api/v1/anagrams-list/2'
-      expect(json).to eq(%w[Dear Read dare dear read])
+      expect(json[0]).to eq(%w[Dear Read dare dear read])
     end
 
     it 'should return 404 if integer is too high' do
