@@ -40,6 +40,7 @@ module Api
 
       # curl http://localhost:3000/api/v1/anagrams-list/:integer
       def list
+        final_array = []
         sorted_word_array = Anagram.all.pluck(:sorted_word)
         # Create hash of matching `sorted_words` then select all with value count
         # less then or greater to the given parameter, then grab those keys
@@ -51,7 +52,11 @@ module Api
         if anagrams_array == []
           render status: 404
         else
-          render json: anagrams_array.flat_map { |anagram| Anagram.where(sorted_word: anagram).pluck(:word).sort }
+          anagrams_array.each { |anagram| final_array << Anagram
+                                                        .where(sorted_word: anagram)
+                                                        .pluck(:word).sort
+                                                      }
+          render json: final_array, status: 200
         end
       end
 
@@ -103,9 +108,12 @@ module Api
 
       # curl -X DELETE http://localhost:3000/api/v1/anagrams/:word/destroy_anagram
       def destroy_anagram
-
-        Anagram.where(sorted_word: @anagram.sorted_word).destroy_all
-        render status: 204
+        if @anagram == nil
+          render json: "That word does not exist in the corpus", status: 404
+        else
+          Anagram.where(sorted_word: @anagram.sorted_word).destroy_all
+          render status: 204
+        end
       end
 
       private
