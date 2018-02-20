@@ -12,7 +12,7 @@ module Api
         end
       end
 
-      # curl -X GET http://localhost:3000/api/v1/anagram-compare -d "words={word1, word2}"
+      # curl -X GET http://localhost:3000/api/v1/anagram-compare -d "words={ word1, word2 }"
       def compare
         words = params[:words].gsub(/{|}/, '').split(", ")
 
@@ -73,7 +73,7 @@ module Api
         render json: "#{Anagram.where(sorted_word: largest_anagram).pluck(:word).sort}", status: 201
       end
 
-      # curl -X POST http://localhost:3000/api/v1/anagrams -d "words={word1, word2}"
+      # curl -X POST http://localhost:3000/api/v1/anagrams -d "words={ word1, word2 }"
       def create
         success = []
 

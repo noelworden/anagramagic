@@ -17,7 +17,7 @@ This app can be used two ways, either pulled down and ran locally, or by utilizi
     - `https://anagramagic.herokuapp.com/api/v1`
 
 ### Endpoints
-  - **GET** `/anagrams/{word}`
+  - **GET** `/anagrams/{ word }`
     - Get anagrams of a desired word
       - Required Params
         - none
@@ -51,7 +51,7 @@ This app can be used two ways, either pulled down and ran locally, or by utilizi
   - **GET** `/anagram-compare`
     - Get comparison of whether two provided words are anagrams of each other. Must be exactly two words.
       - Required Params
-        - `word={word1, word2}`
+        - `word={ word1, word2 }`
       - Optional Params
         - none
       - Successful Response
@@ -161,7 +161,7 @@ This app can be used two ways, either pulled down and ran locally, or by utilizi
   - **POST** `/anagrams`
     - Post additional words to the corpus. Can be a single or multiple word array.
       - Required Params
-        - `word={word1, word2}`
+        - `word={ word1, word2 }`
       - Optional Params
         - none
       - Successful Response
