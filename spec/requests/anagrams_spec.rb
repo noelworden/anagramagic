@@ -83,11 +83,11 @@ RSpec.describe 'Anagrams API', type: :request do
     end
 
     it 'displays the details of the corpus' do
-      expect(json["Total Corpus Count"]).to eq("6")
-      expect(json["Minimum Word Length"]).to eq("4")
-      expect(json["Maximum Word Length"]).to eq("4")
-      expect(json["Median Word Length"]).to eq("4.0")
-      expect(json["Average Word Length"]).to eq("4.0")
+      expect(json["Total Corpus Count"]).to eq(6)
+      expect(json["Minimum Word Length"]).to eq(4)
+      expect(json["Maximum Word Length"]).to eq(4)
+      expect(json["Median Word Length"]).to eq(4.0)
+      expect(json["Average Word Length"]).to eq(4.0)
     end
 
     it 'returns status code 200' do
@@ -97,27 +97,26 @@ RSpec.describe 'Anagrams API', type: :request do
 
   describe 'GET /api/v1/anagrams-list/:integer' do
     it 'should return results if correct integer is used' do
-      get "/api/v1/anagrams-list/2"
-      expect(json[0]).to eq(["Dear", "Read", "dare", "dear", "read"])
+      get '/api/v1/anagrams-list/2'
+      expect(json).to eq(%w[Dear Read dare dear read])
     end
 
     it 'should return 404 if incorrect integer is used' do
-      get "/api/v1/anagrams-list/8"
+      get '/api/v1/anagrams-list/8'
       expect(response).to have_http_status(404)
     end
   end
 
   describe 'GET /big-ol-anagram' do
     it 'should list of largest anagram' do
-      get "/api/v1/big-ol-anagram"
-      expect(json).to eq(["Dear", "Read", "dare", "dear", "read"])
+      get '/api/v1/big-ol-anagram'
+      expect(json).to eq(%w[Dear Read dare dear read])
     end
   end
 
   describe 'POST /api/v1/anagrams' do
-    let (:valid_attributes) { { words: "test01, test02" } }
+    let :valid_attributes { { words: "test01, test02" } }
 
-    # TODO NOTES had difficulty using 'before' when trying to get a database count
     it 'increases Anagram count by 2' do
       expect {
         post '/api/v1/anagrams', params: valid_attributes
@@ -132,7 +131,9 @@ RSpec.describe 'Anagrams API', type: :request do
 
   describe 'DELETE /api/v1/anagrams/:word' do
     it 'deletes a single record' do
-      expect { delete "/api/v1/anagrams/#{word}" }.to change(Anagram, :count).by(-1)
+      expect {
+        delete "/api/v1/anagrams/#{word}"
+      }.to change(Anagram, :count).by(-1)
     end
 
     it 'returns status code 204' do
@@ -143,22 +144,26 @@ RSpec.describe 'Anagrams API', type: :request do
 
   describe 'DELETE_ALL /api/v1/anagrams/' do
     it 'deletes all records' do
-      expect { delete '/api/v1/anagrams' }.to change(Anagram, :count).to(0)
+      expect {
+        delete '/api/v1/destroy-all-anagrams'
+      }.to change(Anagram, :count).to(0)
     end
 
     it 'returns status code 204' do
-      delete "/api/v1/anagrams"
+      delete '/api/v1/destroy-all-anagrams'
       expect(response).to have_http_status(204)
     end
   end
 
   describe 'DELETE_ONE /api/v1/anagrams/:word/destroy_anagram' do
     it 'deletes all records' do
-      expect { delete "/api/v1/anagrams/#{word}/destroy_anagram" }.to change(Anagram, :count).to(1)
+      expect {
+        delete "/api/v1/anagrams/#{word}/destroy_anagram"
+      }.to change(Anagram, :count).to(1)
     end
 
     it 'returns status code 204' do
-      delete "/api/v1/anagrams"
+      delete "/api/v1/anagrams/#{word}/destroy_anagram"
       expect(response).to have_http_status(204)
     end
   end
