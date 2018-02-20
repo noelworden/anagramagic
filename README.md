@@ -1,6 +1,6 @@
 # Anagramagic
 This is an app that lets you experiment with anagrams (a word or phrase formed by rearranging the letters of a different word or phrase).
-Below are a set of enpoints that can be utilized to do a variety of anagram-ish things. The database contains every word in the English dictionary, and there are also endpoints to add words.
+Below are a set of enpoints that can be utilized to do a variety of anagram-ish things. The database contains every word in the English dictionary, and there are also endpoints to add/delete words.
 
 This app can be used two ways, either pulled down and ran locally, or by utilizing the existing Heroku app:
 
