@@ -17,82 +17,112 @@ This app can be used two ways, either pulled down and ran locally, or by utilizi
           - optional parameter to limit options of result
         - `?proper_nouns={ boolean }`
           - option parameter to show propert nouns in result
-      - Response Body
+      - Successful Response
+        - Body
 
-        ```
-        {
-          "anagrams": [
-              "ared",
-              "daer",
-              "dare",
-              "dear"
-          ]
-        }
-        ```
-      - Status
-        - `200`
+          ```
+          {
+            "anagrams": [
+                "ared",
+                "daer",
+                "dare",
+                "dear"
+            ]
+          }
+          ```
+        - Status
+          - `200`
+      - Unsuccessful Response
+        - Body
+
+           `That word does not exist in the corpus`
+        - Status
+          - `404`
+
   - **GET** `/anagram-compare`
     - Get comparison of whether two provided words are anagrams of each other. Must be exactly two words.
       - Required Params
         - `word={word1, word2}`
       - Optional Params
         - none
-      - Response Body
-        - `true`/`false`
-      - Status
-        - `200`
+      - Successful Response
+        - Body
+          - `true`/`false`
+        - Status
+          - `200`
+      - Unsuccesful Response
+        - Body
+
+          `Please check your word count, you need exactly two words`
+        - Status
+          - ` 404`
+
   - **GET** `/corpus-detail`
     - Get details of corpus
       - Required Params
         - none
       - Optional Params
         - none
-      - Response Body
-        ```
-        {
-          "Total Corpus Count": 235889,
-          "Minimum Word Length": 1,
-          "Maximum Word Length": 24,
-          "Median Word Length": 9,
-          "Average Word Length": 9.569
-        }
-        ```
-      - Status
-        - `200`
+      - Successful Response
+        - Body
+            ```
+            {
+              "Total Corpus Count": 235889,
+              "Minimum Word Length": 1,
+              "Maximum Word Length": 24,
+              "Median Word Length": 9,
+              "Average Word Length": 9.569
+            }
+            ```
+        - Status
+          - `200`
+      - Unsuccessful Response
+        - Body
+          - none
+        - Status
+          - none
+
   - **GET** `anagrams-list/{ integer }`
     - Get all anagrams with a count greater than or equal to provided integer
       - Required Params
         - none
       - Optional Params
         - none
-      - Response Body
-        ```
-        [
+      - Successful Response
+        - Body
+          ```
           [
-              "Canari",
-              "Carian",
-              "Crania",
-              "acinar",
-              "arnica",
-              "canari",
-              "carina",
-              "crania",
-              "narica"
-          ],
-          [
-              "Caroline",
-              "Cornelia",
-              "Lonicera",
-              "acrolein",
-              "arecolin",
-              "caroline",
-              "colinear",
-              "creolian"
+            [
+                "Canari",
+                "Carian",
+                "Crania",
+                "acinar",
+                "arnica",
+                "canari",
+                "carina",
+                "crania",
+                "narica"
+            ],
+            [
+                "Caroline",
+                "Cornelia",
+                "Lonicera",
+                "acrolein",
+                "arecolin",
+                "caroline",
+                "colinear",
+                "creolian"
+            ]
           ]
-        ]
-        ```
-      - Status
-        - `200`
+          ```
+        - Status
+          - `200`
+      - Unsuccessful Response
+        - Body
+
+          `There are no angrams of that length, check your integer`
+        - Status
+          - `404`
 
   - **GET** `/big-ol-anagram`
     - Get the largest anagram in the corpus
@@ -100,84 +130,122 @@ This app can be used two ways, either pulled down and ran locally, or by utilizi
         - none
       - Optional Params
         - none
-      - Response Body
-        ```
-        {
-          "Total Corpus Count": 235888,
-          "Minimum Word Length": 1,
-          "Maximum Word Length": 24,
-          "Median Word Length": 9,
-          "Average Word Length": 9.569
-        }
-        ```
+      - Successful Response
+        - Body
+          ```
+          {
+            "Total Corpus Count": 235888,
+            "Minimum Word Length": 1,
+            "Maximum Word Length": 24,
+            "Median Word Length": 9,
+            "Average Word Length": 9.569
+          }
+          ```
         - Status
           - `200`
+      - Unsuccessful Response
+        - Body
+          - none
+        - Status
+          - none
+
   - **POST** `/anagrams`
     - Post additional words to the corpus. Can be a single or multiple word array.
       - Required Params
         - `word={word1, word2}`
       - Optional Params
         - none
-      - Response Body
-        ```
-        [
+      - Successful Response
+        - Body
+          ```
+          [
+            {
+                "id": 235889,
+                "word": "testx",
+                "sorted_word": "esttx",
+                "created_at": "2018-02-20T02:54:28.304Z",
+                "updated_at": "2018-02-20T02:54:28.304Z",
+                "word_length": 4,
+                "proper_noun": false
+            },
+            {
+                "id": 235890,
+                "word": "testz",
+                "sorted_word": "esttz",
+                "created_at": "2018-02-20T02:54:28.456Z",
+                "updated_at": "2018-02-20T02:54:28.456Z",
+                "word_length": 4,
+                "proper_noun": false
+            }
+          ]
+          ```
+        - Status
+          - `201`
+      - Unsuccessful Response
+        - Body
+          ```
           {
-              "id": 235889,
-              "word": "testx",
-              "sorted_word": "esttx",
-              "created_at": "2018-02-20T02:54:28.304Z",
-              "updated_at": "2018-02-20T02:54:28.304Z",
-              "word_length": 4,
-              "proper_noun": false
-          },
-          {
-              "id": 235890,
-              "word": "testz",
-              "sorted_word": "esttz",
-              "created_at": "2018-02-20T02:54:28.456Z",
-              "updated_at": "2018-02-20T02:54:28.456Z",
-              "word_length": 4,
-              "proper_noun": false
-          }
-        ]
-        ```
-      - Status
-        - `201`
+            "status": 422,
+            "error": "Unprocessable Entity"
+           }
+           ```
+         - Status
+          - `402`
+
   - **DELETE** `/anagrams/{ word }`
     - Delete single word from corpus
       - Required Params
         - none
       - Optional Params
         - none
-      - Response Body
-        - empty
-      - Status
-        - `204`
+      - Successful Response
+        - Body
+          - empty
+        - Status
+          - `204`
+      - Unsuccessful Response
+        - Body
+          - `That word does not exist in the corpus`
+        - Status
+          - 404
   - **DELETE** `/anagrams/{ word }/destroy_anagram`
     - Delete word an all its anagrams from corpus
       - Required Params
         - none
       - Optional Params
         - none
-      - Response Body
-        - empty
-      - Status
-        - `204`
+      - Successful Response
+        - Body
+          - empty
+        - Status
+          - `204`
+      - Unsuccessful Response
+        - Body
+          - `That word does not exist in the corpus`
+        - Status
+          - 404
   - **DELETE** `/destroy-all-anagrams`
     - Delete _ENTIRE CORPUS. PLEASE BE CAREFUL_
       - Required Params
         - none
       - Optional Params
         - none
-      - Response Body
-        - empty
-      - Status
-        - `204`
+      - Successful Response
+        - Body
+          - empty
+        - Status
+          - `204`
+      - Unsuccessful Response
+        - Body
+          - none
+        - Status
+          - none
 
 ## Development Notes
 - I started with a SQLite database, but switched to Postgresql once I decided I would host the app on Heroku.
 - I decided to create additional attributes when seeding the database, which made the initial database creation slow, but the requests more efficient.
 - It seemed odd to make a `destroy-all` request, not sure how a user would use it, and it could cause a lot of damage. It also seems like something that should have a confirmation, so thats why I made the endpoint URL so descriptive.
+- Included plain text error messages where applicable. Detailed error messages are better error messages.
 
 **v2 Considerations**
   - Because this lives online, it should have a authentication system in place.
