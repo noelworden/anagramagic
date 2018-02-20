@@ -8,7 +8,7 @@ Rails.application.routes.draw do
       get '/big-ol-anagram' => 'anagrams#maximum'
       post '/anagrams' => 'anagrams#create'
       delete '/anagrams/:word' => 'anagrams#destroy'
-      delete '/anagrams' => 'anagrams#destroy_all'
+      delete '/destroy-all-anagrams' => 'anagrams#destroy_all'
       delete '/anagrams/:word/destroy_anagram' => 'anagrams#destroy_anagram'
     end
   end
