@@ -14,17 +14,15 @@ module Api
 
       # curl -X GET http://localhost:3000/api/v1/anagram-compare -d "words={word1, word2}"
       def compare
-        array = params[:words].gsub(/{|}/, '').split(", ")
+        words = params[:words].gsub(/{|}/, '').split(", ")
 
-        if array.count != 2
+        if words.count != 2
           render json: "Please check your word count, you need exactly two words", status: 404
         else
-          first_word = array[0].downcase.chars.sort.join
-          second_word = array[1].downcase.chars.sort.join
+          first_word = words[0].downcase.chars.sort.join
+          second_word = words[1].downcase.chars.sort.join
 
-          boolean = first_word == second_word ? "true" : "false"
-
-          render json: boolean, status: 200
+          render json: first_word == second_word, status: 200
         end
       end
 
@@ -32,40 +30,40 @@ module Api
       def corpus_detail
         word_lengths = Anagram.all.pluck(:word_length)
 
-        render json: { "Total Corpus Count": "#{Anagram.all.count}",
-                       "Minimum Word Length": "#{word_lengths.min}",
-                       "Maximum Word Length": "#{word_lengths.max}",
-                       "Median Word Length": "#{median(word_lengths)}",
-                       "Average Word Length": "#{(word_lengths.sum.to_f / word_lengths.count.to_f).round(3)}"
+        render json: { "Total Corpus Count": Anagram.all.count,
+                       "Minimum Word Length": word_lengths.min,
+                       "Maximum Word Length": word_lengths.max,
+                       "Median Word Length": median(word_lengths),
+                       "Average Word Length": (word_lengths.sum.to_f / word_lengths.count.to_f).round(3)
                      }, status: 200
       end
 
       # curl http://localhost:3000/api/v1/anagrams-list/:integer
       def list
-        final_array = []
-
         sorted_word_array = Anagram.all.pluck(:sorted_word)
-        # create hash of matching `sorted_words` then select all with value count
+        # Create hash of matching `sorted_words` then select all with value count
         # less then or greater to the given parameter, then grab those keys
-        anagrams_array = sorted_word_array.group_by(&:itself).select{|_key, value| value.count >= params[:integer].to_i }.keys
+        anagrams_array = sorted_word_array
+                          .group_by(&:itself)
+                          .select{|_key, value| value.count >= params[:integer].to_i }
+                          .keys
 
         if anagrams_array == []
           render status: 404
         else
-          anagrams_array.each do |anagram|
-            final_array << Anagram.where(sorted_word: anagram).pluck(:word).sort
-          end
-
-          render json: final_array
+          render json: anagrams_array.flat_map { |anagram| Anagram.where(sorted_word: anagram).pluck(:word).sort }
         end
       end
 
       # curl http://localhost:3000/api/v1/big-ol-anagram
       def maximum
         sorted_word_array = Anagram.all.pluck(:sorted_word)
-        # create hash of matching `sorted_words`, then sort by the number of values,
+        # Create hash of matching `sorted_words`, then sort by the number of values,
         # and grab last (and largest) key
-        largest_anagram = sorted_word_array.group_by(&:itself).sort_by {|_key, value| value.count}.last[0]
+        largest_anagram = sorted_word_array
+                          .group_by(&:itself)
+                          .sort_by {|_key, value| value.count}
+                          .last[0]
 
         render json: "#{Anagram.where(sorted_word: largest_anagram).pluck(:word).sort}", status: 201
       end
@@ -83,14 +81,18 @@ module Api
           end
         end
 
-        #will automatically break and display error, only setting up for success message
+        # Will automatically break and display error, only setting up for success message
         render json: success.to_json, status: 201
       end
 
       # curl -X DELETE http://localhost:3000/api/v1/anagrams/:word
       def destroy
-        @anagram.destroy
-        head :no_content
+        if @anagram == nil
+          render json: "That word does not exist in the corpus", status: 404
+        else
+          @anagram.destroy
+          head :no_content
+        end
       end
 
       # curl -X DELETE http://localhost:3000/api/v1/anagrams
@@ -101,12 +103,15 @@ module Api
 
       # curl -X DELETE http://localhost:3000/api/v1/anagrams/:word/destroy_anagram
       def destroy_anagram
-        array = Anagram.where(sorted_word: @anagram.sorted_word)
+        # array = Anagram.where(sorted_word: @anagram.sorted_word)
+        #
+        # array.each do |anagram|
+        #   anagram.destroy
+        # end
+        #
+        # render status: 204
 
-        array.each do |anagram|
-          anagram.destroy
-        end
-
+        Anagram.where(sorted_word: @anagram.sorted_word).destroy_all
         render status: 204
       end
 
