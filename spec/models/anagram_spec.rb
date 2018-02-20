@@ -1,10 +1,23 @@
+# == Schema Information
+#
+# Table name: anagrams
+#
+#  id          :integer          not null, primary key
+#  word        :string
+#  sorted_word :string
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
+#  word_length :integer
+#  proper_noun :boolean          default(FALSE)
+#
+
 require 'rails_helper'
 
 RSpec.describe Anagram, type: :model do
   describe 'creating a valid record' do
     anagram = Anagram.new(word: "test")
 
-    it "is valid with valid attributes" do
+    it 'is valid with valid attributes' do
       expect(anagram).to be_valid
     end
 

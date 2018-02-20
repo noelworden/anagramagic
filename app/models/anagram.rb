@@ -1,13 +1,20 @@
-class Anagram < ApplicationRecord
-  validates_presence_of :word
-  validates_uniqueness_of :word
-  validates_presence_of :sorted_word
-  validates_presence_of :word_length
+# == Schema Information
+#
+# Table name: anagrams
+#
+#  id          :integer          not null, primary key
+#  word        :string
+#  sorted_word :string
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
+#  word_length :integer
+#  proper_noun :boolean          default(FALSE)
+#
 
-  #run before_save to get letter count in column
-  before_validation :sort_word
-  before_validation :word_length
-  before_validation :proper_noun
+class Anagram < ApplicationRecord
+  validates :word, presence: true, uniqueness: true
+  validates_presence_of :sorted_word, :word_length
+  before_validation :sort_word, :word_length, :proper_noun
 
   def sort_word
     self.sorted_word = word.downcase.chars.sort.join
