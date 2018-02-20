@@ -4,8 +4,17 @@ Below are a set of enpoints that can be utilized to do a variety of anagram-ish 
 
 This app can be used two ways, either pulled down and ran locally, or by utilizing the existing Heroku app:
 
-- local URL (default Rails server) `http://localhost:3000/api/vi`
-- live URL `https://anagramagic.herokuapp.com/api/v1`
+- ## Local Instructions
+  - Clone down repo
+  - Run `rake db:create db:migrate db:seed`
+  - Grab a coffee (datebase seeding can take a few hours)
+  - Start server with `rails s`
+  - Utilize this URL (assuming you are are running server on default port)
+    - `http://localhost:3000/api/vi`
+
+- ## Live URL instructions
+  - Utilize this URL:
+    - `https://anagramagic.herokuapp.com/api/v1`
 
 ### Endpoints
   - **GET** `/anagrams/{word}`
