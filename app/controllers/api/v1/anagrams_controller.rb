@@ -103,23 +103,12 @@ module Api
 
       # curl -X DELETE http://localhost:3000/api/v1/anagrams/:word/destroy_anagram
       def destroy_anagram
-        # array = Anagram.where(sorted_word: @anagram.sorted_word)
-        #
-        # array.each do |anagram|
-        #   anagram.destroy
-        # end
-        #
-        # render status: 204
 
         Anagram.where(sorted_word: @anagram.sorted_word).destroy_all
         render status: 204
       end
 
       private
-
-      def anagram_params
-        params.permit(:words)
-      end
 
       def set_anagram
         @anagram = Anagram.find_by(word: params[:word])
