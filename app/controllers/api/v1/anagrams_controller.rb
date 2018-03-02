@@ -5,8 +5,8 @@ module Api
 
       # curl http://localhost:3000/api/v1/anagrams/:word?limit=:integer&proper_nouns=false
       def show
-        if @anagram == nil
-          render plain: 'That word does not exist in the corpus', status: 404
+        if @anagram.nil?
+          render json: { error: 'That word does not exist in the corpus' }, status: 404
         else
           render json: @anagram, limit: params[:limit], proper_nouns: params[:proper_nouns]
         end
@@ -17,7 +17,7 @@ module Api
         words = params[:words].gsub(/{|}/, '').split(", ")
 
         if words.count != 2
-          render plain: 'Please check your word count, you need exactly two words' , status: 404
+          render json: { error: 'Please check your word count, you need exactly two words' }, status: 404
         else
           first_word = words[0].downcase.chars.sort.join
           second_word = words[1].downcase.chars.sort.join
@@ -50,7 +50,7 @@ module Api
                           .keys
 
         if anagrams_array == []
-          render plain: 'There are no angrams of that length, check your integer', status: 404
+          render json: { error: 'There are no angrams of that length, check your integer' }, status: 404
         else
           anagrams_array.each { |anagram| final_array << Anagram
                                                         .where(sorted_word: anagram)
