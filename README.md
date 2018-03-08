@@ -142,13 +142,19 @@ This app can be used two ways, either pulled down and ran locally, or by utilizi
       - Successful Response
         - Body
           ```
-          {
-            "Total Corpus Count": 235888,
-            "Minimum Word Length": 1,
-            "Maximum Word Length": 24,
-            "Median Word Length": 9,
-            "Average Word Length": 9.569
-          }
+          [
+            "Orang",
+            "Ronga",
+            "angor",
+            "argon",
+            "goran",
+            "grano",
+            "groan",
+            "nagor",
+            "orang",
+            "organ",
+            "rogan"
+          ]
           ```
         - Status
           - `200`
