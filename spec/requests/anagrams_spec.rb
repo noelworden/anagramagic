@@ -51,13 +51,13 @@ RSpec.describe 'Anagrams API', type: :request do
   describe 'GET /api/v1/anagram-compare' do
     it "should show error if only one entry" do
       get "/api/v1/anagram-compare", params: { words: "yyyy"}
-      expect(response.body).to eq("Please check your word count, you need exactly two words")
+      expect(json["error"]).to eq("Please check your word count, you need exactly two words")
       expect(response).to have_http_status(404)
     end
 
     it "should show error if more than two entries" do
       get "/api/v1/anagram-compare", params: { words: "xxxx, yyyy, zzzz"}
-      expect(response.body).to eq("Please check your word count, you need exactly two words")
+      expect(json["error"]).to eq("Please check your word count, you need exactly two words")
       expect(response).to have_http_status(404)
     end
 
@@ -115,7 +115,7 @@ RSpec.describe 'Anagrams API', type: :request do
   end
 
   describe 'POST /api/v1/anagrams' do
-    let :valid_attributes { { words: "test01, test02" } }
+    let :valid_attributes { { "words": ["wordx", "wordz"] } }
 
     it 'increases Anagram count by 2' do
       expect {
