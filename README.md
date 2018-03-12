@@ -48,24 +48,6 @@ This app can be used two ways, either pulled down and ran locally, or by utilizi
         - Status
           - `404`
 
-  - **GET** `/anagram-compare`
-    - Get comparison of whether two provided words are anagrams of each other. Must be exactly two words.
-      - Required Params
-        - `word={ word1, word2 }`
-      - Optional Params
-        - none
-      - Successful Response
-        - Body
-          - `true`/`false`
-        - Status
-          - `200`
-      - Unsuccesful Response
-        - Body
-
-          `Please check your word count, you need exactly two words`
-        - Status
-          - ` 404`
-
   - **GET** `/corpus-detail`
     - Get details of corpus
       - Required Params
@@ -167,7 +149,7 @@ This app can be used two ways, either pulled down and ran locally, or by utilizi
   - **POST** `/anagrams`
     - Post additional words to the corpus. Can be a single or multiple word array.
       - Required Params
-        - `word={ word1, word2 }`
+        - `{ "words": ["wordx", "wordz"] }`
       - Optional Params
         - none
       - Successful Response
@@ -175,22 +157,10 @@ This app can be used two ways, either pulled down and ran locally, or by utilizi
           ```
           [
             {
-                "id": 235889,
-                "word": "testx",
-                "sorted_word": "esttx",
-                "created_at": "2018-02-20T02:54:28.304Z",
-                "updated_at": "2018-02-20T02:54:28.304Z",
-                "word_length": 4,
-                "proper_noun": false
+              "anagrams":[]
             },
             {
-                "id": 235890,
-                "word": "testz",
-                "sorted_word": "esttz",
-                "created_at": "2018-02-20T02:54:28.456Z",
-                "updated_at": "2018-02-20T02:54:28.456Z",
-                "word_length": 4,
-                "proper_noun": false
+              "anagrams":[]
             }
           ]
           ```
@@ -198,14 +168,9 @@ This app can be used two ways, either pulled down and ran locally, or by utilizi
           - `201`
       - Unsuccessful Response
         - Body
-          ```
-          {
-            "status": 422,
-            "error": "Unprocessable Entity"
-           }
-           ```
+          - none
          - Status
-          - `402`
+          - `204`
 
   - **DELETE** `/anagrams/{ word }`
     - Delete single word from corpus
