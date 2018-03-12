@@ -13,21 +13,24 @@ module Api
       end
 
       # curl -X GET http://localhost:3000/api/v1/anagram-compare -d "words={ word1, word2 }"
-      def compare
-        words = params[:words].gsub(/{|}/, '').split(", ")
-
-        if words.count != 2
-          render json: { error: 'Please check your word count, you need exactly two words' }, status: 404
-        else
-          first_word = words[0].downcase.chars.sort.join
-          second_word = words[1].downcase.chars.sort.join
-
-          render json: first_word == second_word, status: 200
-        end
-      end
+      # TODO get this action to function similar to `create`
+      # def compare
+      #   words = params[:words].gsub(/{|}/, '').split(", ")
+      #
+      #   if words.count != 2
+      #     render json: { error: 'Please check your word count, you need exactly two words' }, status: 404
+      #   else
+      #     first_word = words[0].downcase.chars.sort.join
+      #     second_word = words[1].downcase.chars.sort.join
+      #
+      #     render json: first_word == second_word, status: 200
+      #   end
+      # end
 
       # curl http://localhost:3000/api/v1/corpus-detail
       def corpus_detail
+        #TODO pull out of Controller
+        #TODO min/max/median can be done in postgres
         word_lengths = Anagram.all.pluck(:word_length)
 
         render json: { 'Total Corpus Count': Anagram.all.count,
@@ -73,45 +76,40 @@ module Api
         render json: "#{Anagram.where(sorted_word: largest_anagram).pluck(:word).sort}", status: 201
       end
 
-      # curl -X POST http://localhost:3000/api/v1/anagrams -d "words={ word1, word2 }"
+      # curl -H "Content-Type: application/json" -X POST -d '{"words": ["wordx", "wordz"]}' http://localhost:3001/api/v1/anagrams
+      #TODO not @anagram, its a word
+      #TODO activerecord transaction
       def create
-        success = []
-
-        array = params[:words].gsub(/{|}/, '').split(", ")
-
-        array.each do |word|
-          @anagram = Anagram.create!(word: word)
-          if @anagram.save
-            success << @anagram
-          end
+        anagrams = Anagram.create_multiple(params[:words])
+        if anagrams.present?
+          render json: anagrams, status: 201
+        else
+          head :no_content, status: 400
         end
-
-        # Will automatically break and display error, only setting up for success message
-        render json: success.to_json, status: 201
       end
 
       # curl -X DELETE http://localhost:3000/api/v1/anagrams/:word
       def destroy
-        if @anagram == nil
-          render plain: 'That word does not exist in the corpus', status: 404
+        if @anagram.nil?
+          render json: { error: 'That word does not exist in the corpus' }, status: 404
         else
           @anagram.destroy
           head :no_content
         end
       end
 
-      # curl -X DELETE http://localhost:3000/api/v1/anagrams
+      # curl -X DELETE http://localhost:3000/api/v1/destroy-all-anagrams
       def destroy_all
-        Anagram.all.each(&:destroy)
+        Anagram.delete_all
         head :no_content
       end
 
       # curl -X DELETE http://localhost:3000/api/v1/anagrams/:word/destroy_anagram
       def destroy_anagram
-        if @anagram == nil
-          render plain: 'That word does not exist in the corpus', status: 404
+        if @anagram.nil?
+          render json: { error: 'That word does not exist in the corpus' }, status: 404
         else
-          Anagram.where(sorted_word: @anagram.sorted_word).destroy_all
+          Anagram.remove_all_anagrams(@anagram.sorted_word)
           render status: 204
         end
       end
