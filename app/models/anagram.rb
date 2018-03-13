@@ -48,9 +48,6 @@ class Anagram < ApplicationRecord
   end
 
   def self.most_anagrams
-    #TODO if empty
-    #TODO if multiple
-    #Anagram.where(sorted_word: this)
     Anagram.select("COUNT(id) AS total, sorted_word").group(:sorted_word).order("total DESC").first.sorted_word
   end
 end

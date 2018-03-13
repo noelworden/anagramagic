@@ -13,7 +13,6 @@ module Api
       end
 
       # curl -X GET http://localhost:3000/api/v1/anagram-compare -d "words={ word1, word2 }"
-      # TODO get this action to function similar to `create`
       # def compare
       #   words = params[:words].gsub(/{|}/, '').split(", ")
       #
@@ -29,8 +28,6 @@ module Api
 
       # curl http://localhost:3000/api/v1/corpus-detail
       def corpus_detail
-        #TODO pull out of Controller
-        #TODO min/max/median can be done in postgres
         word_lengths = Anagram.all.pluck(:word_length)
 
         render json: { 'Total Corpus Count': Anagram.all.count,
@@ -77,8 +74,6 @@ module Api
       end
 
       # curl -H "Content-Type: application/json" -X POST -d '{"words": ["wordx", "wordz"]}' http://localhost:3001/api/v1/anagrams
-      #TODO not @anagram, its a word
-      #TODO activerecord transaction
       def create
         anagrams = Anagram.create_multiple(params[:words])
         if anagrams.present?
