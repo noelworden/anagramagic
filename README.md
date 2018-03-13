@@ -7,10 +7,9 @@ This app can be used two ways, either pulled down and ran locally, or by utilizi
 - ### Local Instructions
   - Clone down repo
   - Run `rake db:create db:migrate db:seed`
-  - Grab a coffee (datebase seeding can take a few hours)
   - Start server with `rails s`
   - Utilize this URL (assuming you are are running server on default port)
-    - `http://localhost:3000/api/vi`
+    - `http://localhost:3000/api/v1`
 
 - ### Live URL instructions
   - Utilize this URL:
