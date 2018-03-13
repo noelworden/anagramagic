@@ -2,18 +2,12 @@
 This is an app that lets you experiment with anagrams (a word or phrase formed by rearranging the letters of a different word or phrase).
 Below are a set of enpoints that can be utilized to do a variety of anagram-ish things. The database contains every word in the English dictionary, and there are also endpoints to add/delete words.
 
-This app can be used two ways, either pulled down and ran locally, or by utilizing the existing Heroku app:
-
 - ### Local Instructions
   - Clone down repo
   - Run `rake db:create db:migrate db:seed`
   - Start server with `rails s`
   - Utilize this URL (assuming you are are running server on default port)
     - `http://localhost:3000/api/v1`
-
-- ### Live URL instructions
-  - Utilize this URL:
-    - `https://anagramagic.herokuapp.com/api/v1`
 
 ### Endpoints
   - **GET** `/anagrams/{ word }`
