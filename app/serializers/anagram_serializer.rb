@@ -14,7 +14,6 @@
 class AnagramSerializer < ActiveModel::Serializer
   attributes :anagrams
 
-  #TODO add actual word to be anagrammed
   def anagrams
     limit = @instance_options[:limit].to_i
     proper_nouns = @instance_options[:proper_nouns]
