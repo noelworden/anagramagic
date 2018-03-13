@@ -4,7 +4,12 @@ file = 'data/dictionary.txt'
 corpus = []
 
 File.readlines(file).each do |line|
-  corpus << Anagram.new(word: line.strip)
+  corpus << Anagram.new(
+      word: line.strip,
+      sorted_word: line.downcase.chars.sort.join,
+      word_length: line.chars.count,
+      proper_noun: line.first == line.first.capitalize
+    )
 end
 
 Anagram.import corpus
