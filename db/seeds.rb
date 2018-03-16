@@ -6,8 +6,8 @@ corpus = []
 File.readlines(file).each do |line|
   corpus << Anagram.new(
       word: line.strip,
-      sorted_word: line.downcase.chars.sort.join,
-      word_length: line.chars.count,
+      sorted_word: line.strip.downcase.chars.sort.join,
+      word_length: line.strip.chars.count,
       proper_noun: line.first == line.first.capitalize
     )
 end
